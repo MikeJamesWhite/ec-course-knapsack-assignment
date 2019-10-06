@@ -118,6 +118,11 @@ public class Knapsack {
         knapsack[item_number] = true;
     }
 
+    public void flipItem(int itemNumber) {
+        if (knapsack[itemNumber]) removeItem(itemNumber);
+        else addItem(itemNumber);
+    }
+
     public String toString() {
         return chosenItems.size() + " items: " + chosenItems.toString();
     }

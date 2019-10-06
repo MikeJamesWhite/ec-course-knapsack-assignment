@@ -1,70 +1,56 @@
 package algorithm.ga.main;
 
 import algorithm.ga.base.Chromosome;
+import algorithm.ga.base.Population;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 
 public class GeneticAlgorithm {
-    public static int crossoverType;
-    public static String mutationType;
-    public static String selectionType;
-
-    private static ArrayList<Chromosome> currentGeneration = new ArrayList<>();
-    private static ArrayList<Chromosome> parents = new ArrayList<>();
-    private static ArrayList<Chromosome> offspring;
-    private static ArrayList<Chromosome> nextGeneration = new ArrayList<>();
+    public static DecimalFormat decimalFormat = new DecimalFormat("000000");
+    public static String mutationType, selectionType, crossoverType;
+    public int generationSize;
+    public int maxGenerations;
+    public double crossoverChance, mutationChance;
 
     private static Chromosome bestIndividual;
 
-    public static void execute(int generationSize, int maxGenerations, double crossoverChance, double mutationChance, int numOffspring) {
-        int numGenerations = 0;
+    public GeneticAlgorithm(int generationSize, int maxGenerations, double crossoverChance,
+                            double mutationChance, String mutationType,
+                            String selectionType, String crossoverType) {
+        this.generationSize = generationSize;
+        this.maxGenerations = maxGenerations;
+        this.crossoverChance = crossoverChance;
+        this.mutationChance = mutationChance;
+        GeneticAlgorithm.mutationType = mutationType;
+        GeneticAlgorithm.selectionType = selectionType;
+        GeneticAlgorithm.crossoverType = crossoverType;
+    }
 
-        // Initialise first generation
-        for (int i = 0; i < generationSize; i++) {
-            currentGeneration.add(new Chromosome());
-        }
+    public void execute() {
+        double currentBestFitness = Double.MAX_VALUE;
+        Chromosome overallBestChromosome;
+
+        // Initialise population
+        Population population = new Population(generationSize, crossoverChance, 0.1, mutationChance);
+        Chromosome bestChromosome = population.getPopulation()[0];
 
         // Run for specified number of generations
+        int numGenerations = 0;
         while (numGenerations < maxGenerations) {
-            selectParents();
-
-            offspring = new ArrayList<>();
-            while(offspring.size() < numOffspring)
-
-            produceOffspring();
-            mutateOffspring();
-
-
+            population.evolve();
+            bestChromosome = population.getPopulation()[0];
+            if (bestChromosome.getFitness() < currentBestFitness) {
+                currentBestFitness = bestChromosome.getFitness();
+                System.out.print("generation " + decimalFormat.format(numGenerations)+ " : ");
+                System.out.println(bestChromosome.getGene());
+                System.out.println("Value: "+ (-bestChromosome.getFitness()));
+                System.out.println("WeightL " + (bestChromosome.getGene().getWeight()));
+            }
 
             numGenerations++;
         }
-    }
 
-    public static void selectParents() {
-
-    }
-
-    public static void produceOffspring() {
-
-    }
-
-    public static void mutateOffspring() {
-        switch(mutationType) {
-            case ("bitflip"):
-                break;
-            case("displacement"):
-                break;
-            case("exchange"):
-                break;
-            case("insertion"):
-                break;
-            case("inversion"):
-                break;
-        }
-    }
-
-    public static void selectNextGeneration() {
+        // Print results
 
     }
 }

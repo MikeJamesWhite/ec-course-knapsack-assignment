@@ -6,6 +6,8 @@ import algorithm.ga.evolution.mutation.*;
 import algorithm.ga.main.GeneticAlgorithm;
 import data.Knapsack;
 
+import java.util.Arrays;
+
 public class Chromosome implements Comparable<Chromosome> {
     private final Knapsack knapsack;
 
@@ -16,7 +18,7 @@ public class Chromosome implements Comparable<Chromosome> {
     }
 
     public int getFitness() {
-        return knapsack.getValue();
+        return -knapsack.getValue();
     }
 
     public Knapsack getGene() {
@@ -27,11 +29,11 @@ public class Chromosome implements Comparable<Chromosome> {
         Chromosome[] children;
 
         switch (GeneticAlgorithm.crossoverType) {
-            case 1:
+            case "onepoint":
                 // perform single point crossover
                 children = OnePoint.performOnePointCrossover(this, other);
                 break;
-            case 2:
+            case "twopoint":
                 // perform double point crossover
                 children = TwoPoint.performTwoPointCrossover(this, other);
                 break;
@@ -63,7 +65,7 @@ public class Chromosome implements Comparable<Chromosome> {
                 mutated = Displacement.performDisplacementMutation(this);
                 break;
             default:
-                System.err.println("Error: No crossover type specified.");
+                System.err.println("Error: No mutation type specified.");
                 System.exit(1);
                 return null;
         }
@@ -84,5 +86,12 @@ public class Chromosome implements Comparable<Chromosome> {
         return 0;
     }
 
+    public boolean equals(Object o) {
+        if (!(o instanceof Chromosome))
+            return false;
 
+        Chromosome chromosome = (Chromosome) o;
+
+        return (Arrays.equals(getGene().getKnapsack(), chromosome.getGene().getKnapsack())) && (getFitness() == chromosome.getFitness());
+    }
 }

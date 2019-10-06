@@ -1,5 +1,6 @@
 package main;
 
+import algorithm.ga.main.GeneticAlgorithm;
 import algorithm.sa.main.SimulatedAnnealing;
 import data.Item;
 
@@ -22,9 +23,13 @@ public class Application {
 
         switch (selectedAlgorithm) {
             case("ga"):
-
                 System.out.println("Running Genetic Algorithm...");
-
+                GeneticAlgorithm ga = new GeneticAlgorithm(
+                        1024, 10000, 0.7,
+                        0.00005, "bitflip", "tournament",
+                        "onepoint"
+                );
+                ga.execute();
                 break;
             case("sa"):
                 System.out.println("Running Simulated Annealing...");

@@ -31,9 +31,16 @@ public class TwoPoint {
              child1[i] = first.getGene().getKnapsack()[i];
              child2[i] = second.getGene().getKnapsack()[i];
          }
+
+         Knapsack knapsack1 = new Knapsack(child1);
+         knapsack1.makeValid();
+
+         Knapsack knapsack2 = new Knapsack(child2);
+         knapsack2.makeValid();
+
          return new Chromosome[] {
-                 new Chromosome(new Knapsack(child1)),
-                 new Chromosome(new Knapsack(child2))
+                 new Chromosome(knapsack1),
+                 new Chromosome(knapsack2)
          };
      }
 }
