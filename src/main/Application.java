@@ -1,5 +1,6 @@
 package main;
 
+import algorithm.aco.main.AntColony;
 import algorithm.ga.main.GeneticAlgorithm;
 import algorithm.sa.main.SimulatedAnnealing;
 import data.Item;
@@ -27,7 +28,7 @@ public class Application {
                 GeneticAlgorithm ga = new GeneticAlgorithm(
                         1024, 10000, 0.7,
                         0.00005, "bitflip", "tournament",
-                        "onepoint"
+                        "onepoint", 300
                 );
                 ga.execute();
                 break;
@@ -38,6 +39,8 @@ public class Application {
                 break;
             case("aco"):
                 System.out.println("Running Ant Colony Optimisation...");
+                AntColony antColony = new AntColony(0.3, 0.00005, 10, 10000);
+                antColony.solve();
                 break;
             case("pso"):
                 System.out.println("Running Particle Swarm Optimisation...");

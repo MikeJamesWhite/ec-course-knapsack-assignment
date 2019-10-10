@@ -1,8 +1,9 @@
 package algorithm.ga.base;
 
+import algorithm.ga.evolution.selection.Tournament;
+import algorithm.ga.main.GeneticAlgorithm;
 import main.Configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Population {
@@ -10,8 +11,6 @@ public class Population {
     private double elitismRatio;
     private double mutationRatio;
     private double crossoverRatio;
-    private int numberOfCrossoverOperations = 0;
-    private int numberOfMutationOperations = 0;
 
     public Population(int size, double crossoverRatio, double elitismRatio, double mutationRatio) {
         population = new Chromosome[size];
@@ -35,23 +34,19 @@ public class Population {
             if (Configuration.instance.randomGenerator.nextFloat() <= crossoverRatio) {
                 Chromosome[] parents = selectParents();
                 Chromosome[] children = parents[0].doCrossover(parents[1]);
-                numberOfCrossoverOperations++;
 
                 if (Configuration.instance.randomGenerator.nextFloat() <= mutationRatio) {
                     chromosomeArray[(index++)] = children[0].doMutation();
-                    numberOfMutationOperations++;
                 } else
                     chromosomeArray[(index++)] = children[0];
 
                 if (index < chromosomeArray.length)
                     if (Configuration.instance.randomGenerator.nextFloat() <= mutationRatio) {
                         chromosomeArray[index] = children[1].doMutation();
-                        numberOfMutationOperations++;
                     } else
                         chromosomeArray[index] = children[1];
             } else if (Configuration.instance.randomGenerator.nextFloat() <= mutationRatio) {
                 chromosomeArray[index] = population[index].doMutation();
-                numberOfMutationOperations++;
             } else {
                 chromosomeArray[index] = population[index];
             }
@@ -72,23 +67,18 @@ public class Population {
     private Chromosome[] selectParents() {
         Chromosome[] parentArray = new Chromosome[2];
 
-        for (int i = 0; i < 2; i++) {
-            parentArray[i] = population[Configuration.instance.randomGenerator.nextInt(population.length)];
-            for (int j = 0; j < 3; j++) {
-                int index = Configuration.instance.randomGenerator.nextInt(population.length);
-                if (population[index].compareTo(parentArray[i]) < 0)
-                    parentArray[i] = population[index];
-            }
+        switch (GeneticAlgorithm.selectionType) {
+            case "tournament":
+                parentArray[0] = Tournament.runTournament(GeneticAlgorithm.tournamentSize, population);
+                parentArray[1] = Tournament.runTournament(GeneticAlgorithm.tournamentSize, population);
+                break;
+            case "roulette":
+                break;
+            default:
+                System.err.println("NO VALID SELECTION ALGORITHM SPECIFIED");
+                System.exit(1);
         }
 
         return parentArray;
-    }
-
-    public int getNumberOfCrossoverOperations() {
-        return numberOfCrossoverOperations;
-    }
-
-    public int getNumberOfMutationOperations() {
-        return numberOfMutationOperations;
     }
 }
