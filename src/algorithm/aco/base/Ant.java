@@ -71,7 +71,8 @@ public class Ant {
                     toRemove.addElement(itemIndex);
                 }
                 else {
-                    sum += antColony.getPheromone(itemIndex) / itemWeight;
+                    double desirability = Math.pow(1.0/itemWeight, AntColony.beta);
+                    sum += Math.pow(antColony.getPheromone(itemIndex), AntColony.alpha) * desirability;
                 }
             }
 
@@ -85,8 +86,11 @@ public class Ant {
             for (int j = 0; j < notYetChosen.size(); j++) {
                 int itemIndex = notYetChosen.elementAt(j);
                 int itemWeight = Application.items[itemIndex].weight;
+                double desirability = Math.pow(1.0/itemWeight, AntColony.beta);
 
-                selectionProbability += antColony.getPheromone(itemIndex) / itemWeight / sum;
+                selectionProbability += (
+                        (Math.pow(antColony.getPheromone(itemIndex), AntColony.alpha) * desirability) / sum
+                );
 
                 if (randomNumber < selectionProbability) {
                     selectedItem = itemIndex;

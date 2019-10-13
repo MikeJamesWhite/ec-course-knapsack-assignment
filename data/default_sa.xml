@@ -1,3 +1,6 @@
-temperature 1000.0
-endTemperature 1.0
-coolingFactor 0.997
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<sa_configuration>
+    <start_temperature>1000.0</start_temperature>
+    <end_temperature>1.0</end_temperature>
+    <cooling_factor>0.997</cooling_factor>
+</sa_configuration>

@@ -2,6 +2,7 @@ package main;
 
 import algorithm.aco.main.AntColony;
 import algorithm.ga.main.GeneticAlgorithm;
+import algorithm.pso.main.ParticleSwarmOptimisation;
 import algorithm.sa.main.SimulatedAnnealing;
 import data.Item;
 
@@ -25,25 +26,50 @@ public class Application {
         switch (selectedAlgorithm) {
             case("ga"):
                 System.out.println("Running Genetic Algorithm...");
-                GeneticAlgorithm ga = new GeneticAlgorithm(
-                        1024, 10000, 0.7,
-                        0.00005, "bitflip", "tournament",
-                        "onepoint", 300
-                );
+                GeneticAlgorithm ga;
+
+                if(configuration.equals("best")) {
+                    ga = new GeneticAlgorithm("best_ga.xml");
+                } else {
+                    ga = new GeneticAlgorithm("default_ga.xml");
+                }
                 ga.execute();
                 break;
+
             case("sa"):
                 System.out.println("Running Simulated Annealing...");
-                SimulatedAnnealing sa = new SimulatedAnnealing(1000.0, 1.0, 0.997);
+                SimulatedAnnealing sa;
+
+                if(configuration.equals("best")) {
+                    sa = new SimulatedAnnealing("best_sa.xml");
+                } else {
+                    sa = new SimulatedAnnealing("default_sa.xml");
+                }
                 sa.run();
                 break;
+
             case("aco"):
                 System.out.println("Running Ant Colony Optimisation...");
-                AntColony antColony = new AntColony(0.3, 0.00005, 10, 10000);
-                antColony.solve();
+                AntColony aco;
+
+                if(configuration.equals("best")) {
+                    aco = new AntColony("best_aco.xml");
+                } else {
+                    aco = new AntColony("default_aco.xml");
+                }
+                aco.solve();
                 break;
+
             case("pso"):
                 System.out.println("Running Particle Swarm Optimisation...");
+                ParticleSwarmOptimisation pso;
+
+                if(configuration.equals("best")) {
+                    pso = new ParticleSwarmOptimisation("best_pso.xml");
+                } else {
+                    pso = new ParticleSwarmOptimisation("default_pso.xml");
+                }
+                pso.execute();
                 break;
         }
     }
@@ -141,9 +167,9 @@ public class Application {
     }
 
     /**
-     * Handle loading of configuration from file
+     * Check config files to find best algo
      */
-    private static void loadConfig() {
-
+    private static String getBestAlgo() {
+        return "";
     }
 }

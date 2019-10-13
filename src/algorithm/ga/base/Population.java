@@ -1,5 +1,6 @@
 package algorithm.ga.base;
 
+import algorithm.ga.evolution.selection.RouletteWheel;
 import algorithm.ga.evolution.selection.Tournament;
 import algorithm.ga.main.GeneticAlgorithm;
 import main.Configuration;
@@ -73,6 +74,9 @@ public class Population {
                 parentArray[1] = Tournament.runTournament(GeneticAlgorithm.tournamentSize, population);
                 break;
             case "roulette":
+                RouletteWheel.setupRouletteWheel(population);
+                parentArray[0] = RouletteWheel.selectParent();
+                parentArray[1] = RouletteWheel.selectParent();
                 break;
             default:
                 System.err.println("NO VALID SELECTION ALGORITHM SPECIFIED");

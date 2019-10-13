@@ -4,12 +4,14 @@ import algorithm.ga.base.Chromosome;
 import data.Knapsack;
 import main.Configuration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Displacement {
     private static int numItems = Configuration.instance.numberOfItems;
 
     public static Chromosome performDisplacementMutation(Chromosome chromosome) {
         boolean[] oldKnapsack = chromosome.getGene().getKnapsack();
-        boolean[] newKnapsack = new boolean[numItems];
 
         // Pick range of indexes which will be displaced
         int index1 = Configuration.instance.randomGenerator.nextInt(numItems);
@@ -20,26 +22,27 @@ public class Displacement {
             index2 = tmp;
         }
 
-        // Pick destination index
-        /*
-        // Copy array up until source
-        for (int i = 0; i < source; i++) {
-            newKnapsack[i] = oldKnapsack[i];
+        // Split into two lists depending on whether displaced or not
+        ArrayList<Boolean> stationary = new ArrayList<>();
+        ArrayList<Boolean> displaced = new ArrayList<>();
+
+        for (int i = 0; i < oldKnapsack.length; i++) {
+            if (i < index1 || i > index2) {
+                stationary.add(oldKnapsack[i]);
+            } else {
+                displaced.add(oldKnapsack[i]);
+            }
         }
 
-        // Start copying one in front until reach the dest
-        for (int i = source; i < dest; i++) {
-            newKnapsack[i] = oldKnapsack[i+1];
-        }
+        // insert displaced at destination in stationary list
+        int dest = Configuration.instance.randomGenerator.nextInt(stationary.size());
+        stationary.addAll(dest, displaced);
 
-        // Copy source to dest
-        newKnapsack[dest] = oldKnapsack[source];
-
-        // Copy array until end
-        for (int i = dest + 1; i < numItems; i++) {
-            newKnapsack[i] = oldKnapsack[i];
+        // pack into new knapsack array
+        boolean[] newKnapsack = new boolean[numItems];
+        for(int i = 0; i < stationary.size(); i++) {
+            newKnapsack[i] = stationary.get(i);
         }
-        */
 
         // Ensure valid solution
         Knapsack newGene = new Knapsack(newKnapsack);

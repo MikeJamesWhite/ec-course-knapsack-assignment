@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<aco_configuration>
+    <decay_factor>0.3</decay_factor>
+    <initial_pheromone>0.00005</initial_pheromone>
+    <alpha>0.5</alpha>
+    <beta>0.1</beta>
+    <number_of_ants>10</number_of_ants>
+</aco_configuration>
