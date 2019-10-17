@@ -29,8 +29,8 @@ public class GeneticAlgorithm {
         loadConfig(configFile);
     }
 
-    public void execute() {
-        double currentBestFitness = Double.MAX_VALUE;
+    public int execute() {
+        int currentBestFitness = Integer.MAX_VALUE;
 
         // Initialise population
         Population population = new Population(generationSize, crossoverChance, 0.1, mutationChance);
@@ -66,6 +66,8 @@ public class GeneticAlgorithm {
         System.out.println(bestChromosome.getGene());
         System.out.println("Value: "+ (-bestChromosome.getFitness()));
         System.out.println("Weight: " + (bestChromosome.getGene().getWeight()));
+
+        return -bestChromosome.getFitness();
     }
 
     public void loadConfig(String filename) {
@@ -93,7 +95,7 @@ public class GeneticAlgorithm {
         System.out.println("Successfully loaded config!");
     }
 
-    public void writeConfig(String filename, float averageValue) {
+    public void writeConfig(String filename, double averageValue) {
         System.out.println("Writing config file: " + filename);
         Element e = null;
         Document doc;

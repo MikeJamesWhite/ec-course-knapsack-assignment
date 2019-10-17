@@ -5,4 +5,5 @@
     <alpha>0.5</alpha>
     <beta>0.1</beta>
     <number_of_ants>10</number_of_ants>
+    <average_value>1000.0</average_value>
 </aco_configuration>

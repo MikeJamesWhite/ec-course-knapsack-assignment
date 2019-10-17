@@ -1,10 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ga_configuration>
     <generation_size>1024</generation_size>
     <max_generations>10000</max_generations>
     <crossover_chance>0.7</crossover_chance>
-    <mutation_chance>0.00005</mutation_chance>
-    <mutation_type>bitflip</mutation_type>
-    <selection_type>tournament</selection_type>
-    <crossover_type>onepoint</crossover_type>
-    <tournament_size>300</tournament_size>
+    <mutation_chance>5.0E-5</mutation_chance>
+    <mutation_type>displacement</mutation_type>
+    <selection_type>roulette</selection_type>
+    <crossover_type>twopoint</crossover_type>
+    <tournament_size>40</tournament_size>
+    <average_value>999.0</average_value>
 </ga_configuration>

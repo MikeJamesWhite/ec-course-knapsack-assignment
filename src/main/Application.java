@@ -5,11 +5,11 @@ import algorithm.ga.main.GeneticAlgorithm;
 import algorithm.pso.main.ParticleSwarmOptimisation;
 import algorithm.sa.main.SimulatedAnnealing;
 import data.Item;
+import org.w3c.dom.Document;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.*;
 
 public class Application {
     public static Item[] items = new Item[Configuration.instance.numberOfItems];
@@ -33,7 +33,8 @@ public class Application {
                 } else {
                     ga = new GeneticAlgorithm("default_ga.xml");
                 }
-                ga.execute();
+                double value = ga.execute();
+
                 break;
 
             case("sa"):
@@ -64,11 +65,14 @@ public class Application {
                 System.out.println("Running Particle Swarm Optimisation...");
                 ParticleSwarmOptimisation pso;
 
+                /*
                 if(configuration.equals("best")) {
                     pso = new ParticleSwarmOptimisation("best_pso.xml");
                 } else {
                     pso = new ParticleSwarmOptimisation("default_pso.xml");
-                }
+                }*/
+
+                pso = new ParticleSwarmOptimisation(500, 1, 1, 1);
                 pso.execute();
                 break;
         }
@@ -93,6 +97,11 @@ public class Application {
                         System.err.println("Invalid -algorithm value \"" + selectedAlgorithm
                                 + "\". Value should be \"ga\", \"sa\", \"aco\", \"pso\" or \"best-algorithm\".");
                         System.exit(1);
+                    }
+
+                    if (selectedAlgorithm.equals("best-algorithm")) {
+                        selectedAlgorithm = getBestAlgo();
+                        configuration = "best";
                     }
 
                     System.out.println("Selected algorithm: " + selectedAlgorithm);
@@ -170,6 +179,47 @@ public class Application {
      * Check config files to find best algo
      */
     private static String getBestAlgo() {
-        return "";
+        System.out.println("Identifying best algorithm...");
+        String algorithm = "";
+        double best_value = 0;
+        try {
+            // Set up
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document ga = builder.parse(new File(Configuration.instance.dataDirectory + "best_ga.xml"));
+            Document sa = builder.parse(new File(Configuration.instance.dataDirectory + "best_sa.xml"));
+            Document aco = builder.parse(new File(Configuration.instance.dataDirectory + "best_aco.xml"));
+            Document pso = builder.parse(new File(Configuration.instance.dataDirectory + "best_pso.xml"));
+
+            // read values
+            double ga_value = Double.parseDouble(ga.getElementsByTagName("average_value").item(0).getTextContent());
+            double sa_value = Double.parseDouble(sa.getElementsByTagName("average_value").item(0).getTextContent());
+            double aco_value = Double.parseDouble(aco.getElementsByTagName("average_value").item(0).getTextContent());
+            double pso_value = Double.parseDouble(pso.getElementsByTagName("average_value").item(0).getTextContent());
+
+            // find best
+            best_value = ga_value;
+            algorithm = "ga";
+
+            if (sa_value > best_value) {
+                best_value = sa_value;
+                algorithm = "sa";
+            }
+            if (aco_value > best_value) {
+                best_value = aco_value;
+                algorithm = "aco";
+            }
+            if (pso_value > best_value) {
+                best_value = pso_value;
+                algorithm = "pso";
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.out.println("Loaded best algo '" + algorithm + "' with an average value of " + best_value);
+
+        return algorithm;
     }
 }

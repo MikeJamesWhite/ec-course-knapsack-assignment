@@ -3,4 +3,5 @@
     <start_temperature>1000.0</start_temperature>
     <end_temperature>1.0</end_temperature>
     <cooling_factor>0.997</cooling_factor>
+    <average_value>1000.0</average_value>
 </sa_configuration>

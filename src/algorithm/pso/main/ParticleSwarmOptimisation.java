@@ -1,14 +1,17 @@
 package algorithm.pso.main;
 
 import algorithm.pso.base.Particle;
+import data.Knapsack;
 import main.Configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class ParticleSwarmOptimisation {
     public static int maximumIterations = 10000;
 
+    public Knapsack globalBestPosition;
     public int numberOfParticles;
     public double socialCoefficient;
     public double inertiaCoefficient;
@@ -18,37 +21,53 @@ public class ParticleSwarmOptimisation {
 
     public ParticleSwarmOptimisation(String configFile) {
 
+        for (int i = 0; i < numberOfParticles; i++) {
+            particleList.add(new Particle(this));
+        }
     }
 
     public ParticleSwarmOptimisation(
             int numberOfParticles, double socialCoefficient,
             double inertiaCoefficient, double cognitiveCoefficient) {
+        this.socialCoefficient = socialCoefficient;
+        this.inertiaCoefficient = inertiaCoefficient;
+        this.cognitiveCoefficient = cognitiveCoefficient;
 
         for (int i = 0; i < numberOfParticles; i++) {
-            particleList.add(new Particle());
+            particleList.add(new Particle(this));
         }
+
+        Collections.sort(particleList);
+        globalBestPosition = new Knapsack(particleList.get(0).knapsack);
     }
 
     public int execute() {
-        Particle particle = null;
         int currentIteration = 0;
+        int iterationsSinceImprovement = 0;
         boolean isFinished = false;
 
-        while(!isFinished) {
-            if (currentIteration < maximumIterations) {
-                for (int i = 0; i < particleList.size(); i++) {
-                    particle = particleList.get(i);
-                }
+        while(currentIteration < maximumIterations) {
+            currentIteration++;
+            updateParticleList();
+            Collections.sort(particleList);
 
-                Collections.sort(particleList);
-                getVelocity();
-                updateParticleList();
+            if (particleList.get(0).knapsack.getValue() > globalBestPosition.getValue()) {
+                globalBestPosition = new Knapsack(particleList.get(0).knapsack);
+                iterationsSinceImprovement = 0;
 
+                System.out.println("New Best Solution:");
                 System.out.println("currentIteration : " + currentIteration + " | bestValue : " +
-                        particleList.get(0).getBestValue());
-                currentIteration++;
+                        particleList.get(0).getBestValue() + " | weight: " + particleList.get(0).knapsack.getWeight());
+                System.out.println(particleList.get(0).knapsack);
+                System.out.println();
             } else {
-                isFinished = true;
+                iterationsSinceImprovement++;
+            }
+
+
+            if (iterationsSinceImprovement >= 500) {
+                System.out.println("Breaking after " + currentIteration + " iterations, as no improvement since iteration " + (currentIteration-iterationsSinceImprovement));
+                break;
             }
         }
 
@@ -62,39 +81,10 @@ public class ParticleSwarmOptimisation {
         return bestSolution.knapsack.getValue();
     }
 
-    public void randomArrangeParticle(int index) {
-        int indexItem1 = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
-        particleList.get(index).knapsack.flipItem(indexItem1);
-        particleList.get(index).knapsack.makeValid();
-    }
-
-    public void copyFromParticle(int indexSource, int indexDestination) {
-        Particle bestParticle = particleList.get(indexSource);
-
-    }
-
     private void updateParticleList() {
-        // for every particle except the best one
         for (int i = 1; i < particleList.size(); i++) {
-            int numberOfChanges = (int) Math.floor(Math.abs(particleList.get(i).getVelocity()));
-
-            for (int j = 0; j < numberOfChanges; j++) {
-                if (Configuration.instance.randomGenerator.nextBoolean())
-                    randomArrangeParticle(i);
-                copyFromParticle(i-1, i);
-            }
+            particleList.get(i).updateVelocity();
+            particleList.get(i).updatePosition();
         }
-    }
-
-    public int getDistance() {
-        return -1;
-    }
-
-    public int getTotalDistance() {
-        return -1;
-    }
-
-    public void getVelocity() {
-
     }
 }
