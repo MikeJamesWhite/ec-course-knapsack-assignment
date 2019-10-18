@@ -19,8 +19,8 @@ import java.text.DecimalFormat;
 
 public class GeneticAlgorithm {
     public static DecimalFormat decimalFormat = new DecimalFormat("000000");
-    public static String mutationType, selectionType, crossoverType;
-    public static int tournamentSize;
+    public String mutationType, selectionType, crossoverType;
+    public int tournamentSize;
     public int generationSize;
     public int maxGenerations;
     public double crossoverChance, mutationChance;
@@ -29,11 +29,22 @@ public class GeneticAlgorithm {
         loadConfig(configFile);
     }
 
+    public GeneticAlgorithm(String mutationType, String selectionType, String crossoverType, int tournamentSize, int generationSize, int maxGenerations, double crossoverChance, double mutationChance) {
+        this.mutationType = mutationType;
+        this.selectionType = selectionType;
+        this.crossoverType = crossoverType;
+        this.tournamentSize = tournamentSize;
+        this.generationSize = generationSize;
+        this.maxGenerations = maxGenerations;
+        this.crossoverChance = crossoverChance;
+        this.mutationChance = mutationChance;
+    }
+
     public int execute() {
         int currentBestFitness = Integer.MAX_VALUE;
 
         // Initialise population
-        Population population = new Population(generationSize, crossoverChance, 0.1, mutationChance);
+        Population population = new Population(generationSize, crossoverChance, 0.1, mutationChance, this);
         Chromosome bestChromosome = population.getPopulation()[0];
 
         // Run for specified number of generations, or until stagnation
@@ -50,15 +61,16 @@ public class GeneticAlgorithm {
                 System.out.println("Weight: " + (bestChromosome.getGene().getWeight()));
                 System.out.println();
                 generationsSinceImprovement = 0;
+            } else {
+                generationsSinceImprovement++;
             }
-
-            numGenerations++;
-            generationsSinceImprovement++;
 
             if (generationsSinceImprovement > 150) {
                 System.out.println("Stopping after " + numGenerations + " generations due to stagnation for " + generationsSinceImprovement + " generations.");
                 break;
             }
+
+            numGenerations++;
         }
 
         // Print final results
@@ -83,11 +95,14 @@ public class GeneticAlgorithm {
             crossoverChance = Double.parseDouble(document.getElementsByTagName("crossover_chance").item(0).getTextContent());
             generationSize = Integer.parseInt(document.getElementsByTagName("generation_size").item(0).getTextContent());
             maxGenerations = Integer.parseInt(document.getElementsByTagName("max_generations").item(0).getTextContent());
-            tournamentSize = Integer.parseInt(document.getElementsByTagName("tournament_size").item(0).getTextContent());
             mutationType = document.getElementsByTagName("mutation_type").item(0).getTextContent();
             selectionType = document.getElementsByTagName("selection_type").item(0).getTextContent();
             crossoverType = document.getElementsByTagName("crossover_type").item(0).getTextContent();
-
+            if (selectionType.equals("tournament")) {
+                tournamentSize = Integer.parseInt(document.getElementsByTagName("tournament_size").item(0).getTextContent());
+            } else {
+                tournamentSize = 1;
+            }
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(1);
@@ -138,9 +153,11 @@ public class GeneticAlgorithm {
             e.appendChild(doc.createTextNode(crossoverType));
             rootElement.appendChild(e);
 
-            e = doc.createElement("tournament_size");
-            e.appendChild(doc.createTextNode(String.valueOf(tournamentSize)));
-            rootElement.appendChild(e);
+            if(selectionType.equals("tournament")) {
+                e = doc.createElement("tournament_size");
+                e.appendChild(doc.createTextNode(String.valueOf(tournamentSize)));
+                rootElement.appendChild(e);
+            }
 
             e = doc.createElement("average_value");
             e.appendChild(doc.createTextNode(String.valueOf(averageValue)));

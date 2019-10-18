@@ -17,6 +17,6 @@ public class BitFlip {
         // Ensure valid solution
         newGene.makeValid();
 
-        return new Chromosome(newGene);
+        return new Chromosome(newGene, chromosome.ga);
     }
 }

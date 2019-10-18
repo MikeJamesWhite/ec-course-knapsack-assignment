@@ -10,11 +10,16 @@ import java.util.Arrays;
 
 public class Chromosome implements Comparable<Chromosome> {
     private final Knapsack knapsack;
+    public GeneticAlgorithm ga;
 
-    public Chromosome() { this.knapsack = new Knapsack(); }
+    public Chromosome(GeneticAlgorithm ga) {
+        this.knapsack = new Knapsack();
+        this.ga = ga;
+    }
 
-    public Chromosome(Knapsack knapsack) {
+    public Chromosome(Knapsack knapsack, GeneticAlgorithm ga) {
         this.knapsack = knapsack;
+        this.ga = ga;
     }
 
     public int getFitness() {
@@ -28,7 +33,7 @@ public class Chromosome implements Comparable<Chromosome> {
     public Chromosome[] doCrossover(Chromosome other) {
         Chromosome[] children;
 
-        switch (GeneticAlgorithm.crossoverType) {
+        switch (ga.crossoverType) {
             case "onepoint":
                 // perform single point crossover
                 children = OnePoint.performOnePointCrossover(this, other);
@@ -48,7 +53,7 @@ public class Chromosome implements Comparable<Chromosome> {
 
     public Chromosome doMutation() {
         Chromosome mutated;
-        switch (GeneticAlgorithm.mutationType) {
+        switch (ga.mutationType) {
             case("exchange"):
                 mutated = Exchange.performExchangeMutation(this);
                 break;

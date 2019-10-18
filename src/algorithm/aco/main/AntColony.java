@@ -19,14 +19,14 @@ public class AntColony {
     private double[] pheromoneArray;
     private Ant[] antArray;
 
-    public static double decayFactor;
-    public static double alpha;
-    public static double beta;
-    private static int numberOfAnts;
-    private double initialPheromone;
+    public double decayFactor;
+    public double alpha;
+    public double beta;
+    public int numberOfAnts;
+    public double initialPheromone;
     private static int maxIterations = 10000;
 
-    public AntColony(double decayFactor, double initialPheromone, int numberOfAnts, int maxIterations, double alpha, double beta) {
+    public AntColony(double decayFactor, double initialPheromone, int numberOfAnts, double alpha, double beta) {
         // Initialise pheromones
         pheromoneArray = new double[Configuration.instance.numberOfItems];
         for (int i = 0; i < pheromoneArray.length; i++) {
@@ -40,15 +40,29 @@ public class AntColony {
         }
 
         // Init values
-        AntColony.decayFactor = decayFactor;
-        AntColony.numberOfAnts = numberOfAnts;
-        AntColony.alpha = alpha;
-        AntColony.beta = beta;
+        this.decayFactor = decayFactor;
+        this.numberOfAnts = numberOfAnts;
+        this.alpha = alpha;
+        this.beta = beta;
     }
 
     public AntColony(String configFile) {
         loadConfig(configFile);
 
+        // Initialise pheromones
+        pheromoneArray = new double[Configuration.instance.numberOfItems];
+        for (int i = 0; i < pheromoneArray.length; i++) {
+            pheromoneArray[i] = initialPheromone;
+        }
+
+        // Initialise ants
+        antArray = new Ant[numberOfAnts];
+        for (int i = 0; i < antArray.length; i++) {
+            antArray[i] = new Ant(this);
+        }
+    }
+
+    public void reset() {
         // Initialise pheromones
         pheromoneArray = new double[Configuration.instance.numberOfItems];
         for (int i = 0; i < pheromoneArray.length; i++) {
@@ -95,7 +109,7 @@ public class AntColony {
                 iterationsSinceImprovement += 1;
             }
 
-            if (iterationsSinceImprovement >= 1500) {
+            if (iterationsSinceImprovement >= 500) {
                 System.out.println("Breaking after " + i + " iterations, as no improvement since iteration " + (i-iterationsSinceImprovement));
                 break;
             }

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <pso_configuration>
-    <average_value>0.0</average_value>
+    <social_coefficient>1.0</social_coefficient>
+    <cognitive_coefficient>1.0</cognitive_coefficient>
+    <inertia_coefficient>1.0</inertia_coefficient>
+    <number_of_particles>500</number_of_particles>
+    <average_value>1141.5</average_value>
 </pso_configuration>

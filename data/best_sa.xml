@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <sa_configuration>
-    <start_temperature>1000.0</start_temperature>
+    <start_temperature>950.0</start_temperature>
     <end_temperature>1.0</end_temperature>
-    <cooling_factor>0.997</cooling_factor>
-    <average_value>1000.0</average_value>
+    <cooling_factor>0.9995</cooling_factor>
+    <average_value>1115.9</average_value>
 </sa_configuration>

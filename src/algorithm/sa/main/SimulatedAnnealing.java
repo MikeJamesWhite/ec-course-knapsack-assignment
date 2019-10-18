@@ -22,10 +22,16 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 
 public class SimulatedAnnealing {
-    private double start_temperature, temperature, end_temperature, coolingFactor;
+    public double start_temperature, end_temperature, coolingFactor;
 
     public SimulatedAnnealing(String configFile) {
         loadConfig(configFile);
+    }
+
+    public SimulatedAnnealing(double start_temperature, double end_temperature, double coolingFactor) {
+        this.start_temperature = start_temperature;
+        this.end_temperature = end_temperature;
+        this.coolingFactor = coolingFactor;
     }
 
     public double run() {
@@ -37,7 +43,7 @@ public class SimulatedAnnealing {
         bestSolution = new Solution(currentSolution);
         workingSolution = new Solution(currentSolution);
 
-        temperature = start_temperature;
+        double temperature = start_temperature;
 
         while (temperature > end_temperature) {
             isNewSolutionUsed = false;

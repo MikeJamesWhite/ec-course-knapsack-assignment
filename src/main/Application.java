@@ -1,9 +1,13 @@
 package main;
 
 import algorithm.aco.main.AntColony;
+import algorithm.aco.recommender.ACOOptimiser;
 import algorithm.ga.main.GeneticAlgorithm;
+import algorithm.ga.recommender.GAOptimiser;
 import algorithm.pso.main.ParticleSwarmOptimisation;
+import algorithm.pso.recommender.PSOOptimiser;
 import algorithm.sa.main.SimulatedAnnealing;
+import algorithm.sa.recommender.SAOptimiser;
 import data.Item;
 import org.w3c.dom.Document;
 
@@ -23,6 +27,32 @@ public class Application {
         parseArgs(args);
         loadData();
 
+        // handle configuration search
+        if(searchForBest) {
+            switch (selectedAlgorithm) {
+                case("ga"):
+                    System.out.println("Searching for best Genetic Algorithm configuration...");
+                    GAOptimiser.findBestConfig();
+                    return;
+
+                case("sa"):
+                    System.out.println("Searching for best Simulated Annealing configuration...");
+                    SAOptimiser.findBestConfig();
+                    return;
+
+                case("aco"):
+                    System.out.println("Searching for best Ant Colony Optimisation configuration...");
+                    ACOOptimiser.findBestConfig();
+                    return;
+
+                case("pso"):
+                    System.out.println("Searching for best Particle Swarm Optimisation configuration...");
+                    PSOOptimiser.findBestConfig();
+                    return;
+            }
+        }
+
+        // handle running
         switch (selectedAlgorithm) {
             case("ga"):
                 System.out.println("Running Genetic Algorithm...");
@@ -33,8 +63,7 @@ public class Application {
                 } else {
                     ga = new GeneticAlgorithm("default_ga.xml");
                 }
-                double value = ga.execute();
-
+                ga.execute();
                 break;
 
             case("sa"):
@@ -65,14 +94,11 @@ public class Application {
                 System.out.println("Running Particle Swarm Optimisation...");
                 ParticleSwarmOptimisation pso;
 
-                /*
                 if(configuration.equals("best")) {
                     pso = new ParticleSwarmOptimisation("best_pso.xml");
                 } else {
                     pso = new ParticleSwarmOptimisation("default_pso.xml");
-                }*/
-
-                pso = new ParticleSwarmOptimisation(500, 1, 1, 1);
+                }
                 pso.execute();
                 break;
         }

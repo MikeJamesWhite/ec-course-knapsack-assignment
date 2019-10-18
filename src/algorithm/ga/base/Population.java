@@ -8,19 +8,21 @@ import main.Configuration;
 import java.util.Arrays;
 
 public class Population {
+    private GeneticAlgorithm ga;
     private Chromosome[] population;
     private double elitismRatio;
     private double mutationRatio;
     private double crossoverRatio;
 
-    public Population(int size, double crossoverRatio, double elitismRatio, double mutationRatio) {
+    public Population(int size, double crossoverRatio, double elitismRatio, double mutationRatio, GeneticAlgorithm ga) {
         population = new Chromosome[size];
+        this.ga = ga;
         this.elitismRatio = elitismRatio;
         this.mutationRatio = mutationRatio;
         this.crossoverRatio = crossoverRatio;
 
         for (int i = 0; i < size; i++) {
-            population[i] = new Chromosome();
+            population[i] = new Chromosome(ga);
         }
 
         Arrays.sort(population);
@@ -68,10 +70,10 @@ public class Population {
     private Chromosome[] selectParents() {
         Chromosome[] parentArray = new Chromosome[2];
 
-        switch (GeneticAlgorithm.selectionType) {
+        switch (ga.selectionType) {
             case "tournament":
-                parentArray[0] = Tournament.runTournament(GeneticAlgorithm.tournamentSize, population);
-                parentArray[1] = Tournament.runTournament(GeneticAlgorithm.tournamentSize, population);
+                parentArray[0] = Tournament.runTournament(ga.tournamentSize, population);
+                parentArray[1] = Tournament.runTournament(ga.tournamentSize, population);
                 break;
             case "roulette":
                 RouletteWheel.setupRouletteWheel(population);

@@ -40,7 +40,7 @@ public class Ant {
     }
 
     public void layPheromone() {
-        double pheromone = AntColony.decayFactor / getObjectiveValue();
+        double pheromone = antColony.decayFactor / getObjectiveValue();
 
         boolean[] knapsack = tour.getKnapsack();
         for (int i = 0; i < knapsack.length; i++) {
@@ -71,8 +71,8 @@ public class Ant {
                     toRemove.addElement(itemIndex);
                 }
                 else {
-                    double desirability = Math.pow(1.0/itemWeight, AntColony.beta);
-                    sum += Math.pow(antColony.getPheromone(itemIndex), AntColony.alpha) * desirability;
+                    double desirability = Math.pow(1.0/itemWeight, antColony.beta);
+                    sum += Math.pow(antColony.getPheromone(itemIndex), antColony.alpha) * desirability;
                 }
             }
 
@@ -86,10 +86,10 @@ public class Ant {
             for (int j = 0; j < notYetChosen.size(); j++) {
                 int itemIndex = notYetChosen.elementAt(j);
                 int itemWeight = Application.items[itemIndex].weight;
-                double desirability = Math.pow(1.0/itemWeight, AntColony.beta);
+                double desirability = Math.pow(1.0/itemWeight, antColony.beta);
 
                 selectionProbability += (
-                        (Math.pow(antColony.getPheromone(itemIndex), AntColony.alpha) * desirability) / sum
+                        (Math.pow(antColony.getPheromone(itemIndex), antColony.alpha) * desirability) / sum
                 );
 
                 if (randomNumber < selectionProbability) {

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ga_configuration>
-    <generation_size>1024</generation_size>
+    <generation_size>512</generation_size>
     <max_generations>10000</max_generations>
-    <crossover_chance>0.7</crossover_chance>
-    <mutation_chance>0.00005</mutation_chance>
-    <mutation_type>displacement</mutation_type>
+    <crossover_chance>0.6</crossover_chance>
+    <mutation_chance>0.0005</mutation_chance>
+    <mutation_type>exchange</mutation_type>
     <selection_type>roulette</selection_type>
     <crossover_type>twopoint</crossover_type>
-    <tournament_size>40</tournament_size>
 </ga_configuration>

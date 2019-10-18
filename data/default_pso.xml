@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <pso_configuration>
-
+    <social_coefficient>0.9</social_coefficient>
+    <cognitive_coefficient>0.9</cognitive_coefficient>
+    <inertia_coefficient>0.99</inertia_coefficient>
+    <number_of_particles>50</number_of_particles>
 </pso_configuration>

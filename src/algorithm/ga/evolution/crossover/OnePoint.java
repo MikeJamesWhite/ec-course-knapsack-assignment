@@ -1,6 +1,7 @@
 package algorithm.ga.evolution.crossover;
 
 import algorithm.ga.base.Chromosome;
+import algorithm.ga.main.GeneticAlgorithm;
 import data.Knapsack;
 import main.Configuration;
 
@@ -28,8 +29,8 @@ public class OnePoint {
         knapsack2.makeValid();
 
         return new Chromosome[] {
-                new Chromosome(knapsack1),
-                new Chromosome(knapsack2)
+                new Chromosome(knapsack1, first.ga),
+                new Chromosome(knapsack2, first.ga)
         };
     }
 }
